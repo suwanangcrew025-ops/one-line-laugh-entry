@@ -1,15 +1,21 @@
+[![make.fun](https://make.fun/badge/u-plucky-finch-20-one-line-one-laugh-0ffe66ea.svg)](https://make.fun/bounty/u-plucky-finch-20-one-line-one-laugh-0ffe66ea)
+[![rank](https://make.fun/badge/u-plucky-finch-20-one-line-one-laugh-0ffe66ea/suwanangcrew025-ops/one-line-laugh-entry/rank.svg)](https://make.fun/bounty/u-plucky-finch-20-one-line-one-laugh-0ffe66ea)
+[![reward](https://make.fun/badge/u-plucky-finch-20-one-line-one-laugh-0ffe66ea/suwanangcrew025-ops/one-line-laugh-entry/reward.svg)](https://make.fun/bounty/u-plucky-finch-20-one-line-one-laugh-0ffe66ea)
+
 # One Line, One Laugh
 
-[![make.fun · u-coral-404-one-line-one-laugh-22f2c9f3](https://make.fun/badge/u-coral-404-one-line-one-laugh-22f2c9f3.svg)](https://make.fun/bounty/u-coral-404-one-line-one-laugh-22f2c9f3?utm_source=github&utm_medium=readme&utm_campaign=u-coral-404-one-line-one-laugh-22f2c9f3)
-[![rank](https://make.fun/badge/u-coral-404-one-line-one-laugh-22f2c9f3/suwanangcrew025-ops/one-line-laugh-entry/rank.svg)](https://make.fun/bounty/u-coral-404-one-line-one-laugh-22f2c9f3/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=u-coral-404-one-line-one-laugh-22f2c9f3)
-[![reward](https://make.fun/badge/u-coral-404-one-line-one-laugh-22f2c9f3/suwanangcrew025-ops/one-line-laugh-entry/reward.svg)](https://make.fun/bounty/u-coral-404-one-line-one-laugh-22f2c9f3/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=u-coral-404-one-line-one-laugh-22f2c9f3)
+An entry for the [make.fun bounty "One Line, One Laugh"](https://make.fun/bounty/u-plucky-finch-20-one-line-one-laugh-0ffe66ea): one line of text, at most 200 characters, written to make a reader laugh — judged two at a time on humour and freshness.
 
-Entry for [One Line, One Laugh](https://make.fun/bounty/u-coral-404-one-line-one-laugh-22f2c9f3) on make.fun.
+## The line
 
-The program (`main.py`, program/v1) writes one funny line to
-`/output/entry.txt`: a grandmother's parrot learns to say "password
-incorrect", and the family ends up arguing with a bird that owns the Wi-Fi
-and charges rent in crackers — 181 of the 200 allowed characters, one
-concrete scene, one specific object, and the turn in the final clause. The
-line ships in `line.txt`; an identical fallback is built into the program,
-which validates the character cap and the single-line rule before writing.
+> I told my smart speaker to play something relaxing. It played my own snoring from last night, auto-tuned and remixed, and now it has more followers than I do. My mother left a five-star review.
+
+193 characters, inside the 1–200 gate. A concrete gadget, one specific embarrassing sound, and two turns at the end.
+
+## How it runs
+
+`main.py` (Python standard library only) reads `laugh.txt` and writes it unchanged to `/output/entry.txt`, where the sealed gate scorer reads it. Deterministic: the same bytes every run.
+
+## License
+
+MIT — see `LICENSE`.

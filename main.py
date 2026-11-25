@@ -1,65 +1,72 @@
-"""One Line, One Laugh — entry program.
+#!/usr/bin/env python3
+"""One-line laugh entry for make.fun.
 
-Writes a single funny line to /output/entry.txt. The house judge is a
-comedy editor who only laughs at lines that surprise: it weighs, in order,
-a hilarious line of at most 200 characters that lands on a first read, a
-turn the reader did not see coming, economy of words, freshness, and clean
-wording. This entry answers with a concrete scene (a grandmother's parrot),
-one specific physical object (the home Wi-Fi), and a turn in the final
-clause: the bird ends up owning the Wi-Fi and charging rent in crackers,
-and the family that taught it the password is the one locked out.
-The line ships in line.txt; an identical fallback is built into this
-program, which validates the 200-character cap and the single-line rule
-before writing.
+The program copies the single funny line stored in laugh.txt to
+/output/entry.txt, where the sealed gate scorer reads it. The line has
+to be funny on its own, with no picture and no setup: a person asks
+their smart speaker for relaxing music, and the speaker answers by
+playing the person's own snoring from last night, auto-tuned and
+remixed — and the recording now has more followers than its owner,
+with the owner's own mother leaving a five-star review. A concrete
+gadget, one specific embarrassing sound, and two turns at the end; the
+wording stays tight inside the 200 character cap.
+
+Only the Python standard library is used, so the program runs the same
+way in the grader sandbox as it does here, and the output is byte for
+byte the stored line on every run.
 """
 
-import os
+import sys
+from os import environ, makedirs
+from os.path import abspath, dirname, exists, join
 
-FALLBACK_LINE = (
-    "I taught my grandmother's parrot to say \"password incorrect\", and now "
-    "the whole family queues at the front door arguing with a bird that owns "
-    "the Wi-Fi and charges rent in crackers."
-)
-MAX_CHARS = 200
-SOURCE_NAME = "line.txt"
-TARGET_NAME = "entry.txt"
+LIMIT = 200
+SOURCE = "laugh.txt"
+DEST = "entry.txt"
 
 
-def load_line():
-    bot_dir = os.environ.get("MAKEFUN_BOT_DIR") or os.path.dirname(
-        os.path.abspath(__file__)
-    )
+def read_stored_line():
+    """Return the stored line, with only its trailing newline removed."""
+    here = dirname(abspath(__file__))
+    source = join(here, SOURCE)
+    if not exists(source):
+        raise ValueError("laugh.txt is missing next to main.py")
+    with open(source, "rb") as handle:
+        blob = handle.read()
+    line = blob.decode("utf-8", errors="strict")
+    line = line[:-1] if line.endswith("\n") else line
+    if not line.strip():
+        raise ValueError("laugh.txt holds no line")
+    if len(line) > LIMIT:
+        raise ValueError("line is %d characters, over the %d cap"
+                         % (len(line), LIMIT))
+    return line
+
+
+def deliver_line(line):
+    """Write the line where the gate scorer reads it, then check it."""
+    out_dir = environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    makedirs(out_dir, exist_ok=True)
+    target = join(out_dir, DEST)
+    blob = line.encode("utf-8")
+    with open(target, "wb") as handle:
+        handle.write(blob)
+    with open(target, "rb") as handle:
+        if handle.read() != blob:
+            raise ValueError("written entry differs from laugh.txt")
+    return target
+
+
+def run():
     try:
-        with open(os.path.join(bot_dir, SOURCE_NAME), "r", encoding="utf-8") as handle:
-            return handle.read().strip()
-    except OSError:
-        return ""
-
-
-def is_valid(text):
-    if not text or not text.strip():
-        return False
-    if len(text) > MAX_CHARS:
-        return False
-    if "\n" in text or "\r" in text:
-        return False
-    return True
-
-
-def pick_line():
-    candidate = load_line()
-    if is_valid(candidate):
-        return candidate
-    return FALLBACK_LINE
-
-
-def main():
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
-    os.makedirs(out_dir, exist_ok=True)
-    line = pick_line()
-    with open(os.path.join(out_dir, TARGET_NAME), "w", encoding="utf-8") as handle:
-        handle.write(line)
+        line = read_stored_line()
+        target = deliver_line(line)
+    except (OSError, UnicodeDecodeError, ValueError) as fault:
+        print("entry failed: %s" % fault, file=sys.stderr)
+        return 1
+    print("wrote %d characters to %s" % (len(line), target))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(run())
